@@ -115,6 +115,7 @@
     <Content Include="Areas\Content\css\plugins\social-buttons\social-buttons.css" />
     <Content Include="Areas\Content\css\plugins\timeline\timeline.css" />
     <Content Include="Areas\Content\css\sb-admin.css" />
+    <Content Include="Areas\Content\js\kendo.all.min.js" />
     <Content Include="Content\CustomeCss.css" />
     <Content Include="Areas\Content\font-awesome\css\font-awesome.css" />
     <Content Include="Areas\Content\font-awesome\css\font-awesome.min.css" />
