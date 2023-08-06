@@ -1,0 +1,136 @@
+﻿@using DataLayer
+@model DataLayer.Products
+
+@{
+    ViewBag.Title = "افزودن کالای جدید";
+
+}
+
+<div class="row">
+    @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        if (ViewBag.Error == true)
+        {
+            <div class="alert alert-warning text-center">
+                <h5>
+                    کاربر گرامی گروه کالا را مشخص کنید !
+                </h5>
+            </div>
+        }
+
+        @Html.AntiForgeryToken()
+        <div class="col-md-8">
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <span class="control-label col-md-2 text-primary">کلمات کلیدی</span>
+                    <div class="col-md-10">
+                        <input type="text" name="tags" placeholder="کلمات کلیدی را با علامت , از یکدیگر جدا کنید" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ShortDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ShortDescription, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ShortDescription, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="انتشار" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">تصویر محصول</div>
+                    <div class="panel-body text-center">
+                        <div class="thumbnail">
+                            <img id="ProductImgreview" style="max-height:250px; max-width:260px;" src="/Images/ProductImages/No_images_available.png" />
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ImageName, "تصویر", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="file" id="Image" name="ImageUP" />
+                                @Html.ValidationMessageFor(model => model.ImageName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-heading">انتخاب گروه</div>
+                <div class="panel-body">
+                    @{
+                        List<Product_Groups> Group = ViewBag.Groups;
+
+                        <ul>
+                            @foreach (var item in Group.Where(G => G.ParentID == null))
+                            {
+                                <br />
+                                <li class="list-group-item">
+                                    <input type="checkbox" name="selectedGroups" value="@item.GroupID" /> : <span>@item.GroupTitle</span>
+                                    @if (Group.Any(G => G.ParentID == item.GroupID))
+                                    {
+                                        <ul>
+                                            @foreach (var Subitem in Group.Where(G => G.ParentID == item.GroupID))
+                                            {
+                                                <br />
+                                                <li class="list-group-item-info list-group-item">
+                                                    <input type="checkbox" name="selectedGroups" value="@Subitem.GroupID" /> : <span>@Subitem.GroupTitle</span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                        </ul>
+
+                    }
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#Text").ckeditor();
+        });
+        $(function () {
+            $("#ShortDescription").ckeditor();
+        });
+    </script>
+    <script src="/Content/js/ProductJs.js"></script>
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script src="/ckeditor/adapters/jquery.js"></script>
+}

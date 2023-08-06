@@ -1,0 +1,52 @@
+﻿@model IEnumerable<DataLayer.Product_Groups>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th> گروه محصول </th>
+        <th> زیر گروه محصول </th>
+        <th> دستورات </th>
+    </tr>
+
+    @foreach (var Group in Model.Where(G=>G.ParentID==null))
+    {
+        <tr id=Group_@Group.GroupID>
+            <td>
+                @Group.GroupTitle
+            </td>
+            <td>
+                <ul>
+                    <li>
+                        @using (DataLayer.MyEshopContext db = new DataLayer.MyEshopContext())
+                        {
+                            var Subs = db.Product_Groups.Where(G => G.ParentID == Group.GroupID&&G.ParentID!=null).ToList();
+
+                            if (Subs!=null)
+                            {
+                                <ul>
+                                    @foreach (var SubItem in Subs)
+                                    {
+                                        <li id=Group_@SubItem.GroupID>
+                                            <a>@SubItem.GroupTitle</a>
+                                            <div style="margin-top:5px">
+                                                <a onclick="Edit(@SubItem.GroupID)" class="btn-sm btn-warning">ویرایش</a>
+                                                |
+                                                <a onclick="Delete(@SubItem.GroupID)" class="btn-sm btn-danger">حذف</a>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        }
+                    </li>
+                </ul>
+            </td>
+            <td>
+                <div>
+                    <a onclick="Create(@Group.GroupID)" class="btn-sm btn-info">افزودن</a> |
+                    <a onclick="Edit(@Group.GroupID)" class="btn-sm btn-warning">ویرایش</a> |
+                    <a onclick="Delete(@Group.GroupID)" class="btn-sm btn-danger">حذف</a>
+                </div>
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<DataLayer.Product_Comments>
+
+
+@foreach (var item in Model.Where(PC => PC.ParentID == null))
+{
+    <li>
+        <a onclick="ReplyComment(@item.CommentID)" id="Replybtn" class="reply-button">پاسخ</a>
+
+        <img src="/Content/img/avatar.jpg" width="65">
+        <div>
+            <h5>ارسال شده از :  @item.UserName در تاریخ : @item.CreateDate.ToString("yyyy/MM/dd") </h5>
+            <p>
+                @item.Comment
+            </p>
+        </div>
+        <div class="clearfix"></div>
+        @if (Model.Any(C => C.ParentID == item.CommentID))
+        {
+            <ul>
+                @foreach (var SubItem in Model.Where(C => C.ParentID == item.CommentID))
+                {
+                    <li>
+                        <img src="/Content/img/avatar.jpg" width="65">
+                        <div>
+                            <h5>پاسخ داده شده توسط :  @SubItem.UserName در تاریخ : @SubItem.CreateDate.ToString("yyyy/MM/dd") </h5>
+                            <p>
+                                @SubItem.Comment
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                }
+            </ul>
+        }
+
+    </li>
+}
+
+<script>
+    function ReplyComment(id) {
+        $("#ParentID").val(id);
+        $("html, body").animate({ scrollTop: $("#myDiv").offset().top}, 1000);
+    }
+
+
+
+
+    function success() {
+        $("#UserName").val("");
+        $("#Email").val("");
+        $("#WebSite").val("");
+        $("#Comment").val("");
+        $("#ParentID").val("");
+    }
+</script>

@@ -1,0 +1,17 @@
+﻿@model DataLayer.Users
+<body dir="rtl">
+    <div>
+        <div >
+            <h1>کد فعال سازی حساب</h1>
+        </div>
+        <div class="content">
+            <h1>@Model.UserName عزیز</h1>
+            <p>با تشکر از شما برای ثبت نام در سایت دیپ لرن.</p>
+            <p>برای فعال سازی حساب بروی لینک زیر کلیک کنید</p>
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["MyDomain"]/Account/ActiveUser/@Model.ActiveCode" class="button"><p style="color:aliceblue">فعال سازی حساب</p></a>
+        </div>
+        <div>
+            <p>تمامی حقوق محفوظ است. © 2023</p>
+        </div>
+    </div>
+</body>

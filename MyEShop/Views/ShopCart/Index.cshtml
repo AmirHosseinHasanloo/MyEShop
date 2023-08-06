@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "فاکتور";
+}
+
+<div id="ShowOrder">
+    @Html.Action("ListOrder")
+</div>
+
+<script>
+    function CommandOrder(id, count) {
+        $.ajax({
+            url: "/ShopCart/OrderCommands/" + id,
+            type: "Get",
+            data: { count: count }
+        }).done(function (result) {
+            $("#ShowOrder").html(result);
+        });
+    }
+</script>

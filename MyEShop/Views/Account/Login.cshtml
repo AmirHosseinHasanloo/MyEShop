@@ -1,0 +1,74 @@
+﻿@model DataLayer.LoginViewModel
+
+@{
+    ViewBag.Title = "ورود به سایت";
+ }
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()<div class="form-horizontal">
+    <h4>ورود کاربران</h4>
+    <br />
+    @if (User.Identity.IsAuthenticated && Request.QueryString["ReturnUrl"] != null)
+    {
+        <div class="alert alert-warning text-center">
+            <h5>
+                کاربر @User.Identity.Name شما دارای نقش ادمین نستید و نمی توانید به این بخش دسترسی داشته باشید
+            </h5>
+        </div>
+    }
+
+    @if (Request.QueryString["recovery"]!=null)
+    {
+        <div class="alert alert-success text-center">
+            <h5>
+                کاربر عزیز @User.Identity.Name رمز عبور شما با موفقیت تغییر کرد
+            </h5>
+            <br />
+            <h4>
+                میتوانید واردحساب خودتان بشوید
+            </h4>
+        </div>
+    }
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RememberMe, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.RememberMe)
+                @Html.ValidationMessageFor(model => model.RememberMe, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <a class="btn btn-link" href="/ForgotPassword">آیا رمز عبور خود را فراموش کرده اید؟</a>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="ورود" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+}

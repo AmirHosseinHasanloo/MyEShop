@@ -1,0 +1,33 @@
+﻿@model IEnumerable<DataLayer.Features>
+
+@{
+    ViewBag.Title = "صفحه اصلی";
+}
+
+<div style="font-size:25px;font-weight:500" class="alert alert-info text-center">ویژگی محصولات</div>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Create")">ویژگی جدید</a>
+</p>
+<table class="table table-hover table-responsive table-bordered table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FeatureTitle)
+        </th>
+        <th class="text-center">دستورات</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FeatureTitle)
+            </td>
+            <td class="text-center">
+                <a class="btn btn-warning" href="@Url.Action("Edit",new {id=item.FeatureID})">ویرایش</a> |
+                <a class="btn btn-danger" href="@Url.Action("Delete",new {id=item.FeatureID})">حذف</a>
+            </td>
+        </tr>
+    }
+
+</table>

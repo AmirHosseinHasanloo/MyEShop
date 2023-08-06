@@ -1,0 +1,55 @@
+﻿@model IEnumerable<DataLayer.Users>
+
+@{
+    ViewBag.Title = "لیست ادمین های سایت";
+}
+<br />
+<p>
+    <a href="/Create" class="btn btn-primary">افزودن ادمین جدید</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Roles.RoleTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RegisterDate)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Roles.RoleTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                <p>@item.RegisterDate.ToShamsi()</p>
+            </td>
+            <td>
+                <a href="/Admin/Users/Edit/@item.UserID"><span class="fa fa-edit"></span></a> |
+                <a href="/Admin/Users/Details/@item.UserID"><span class="fa fa-info-circle"></span></a> |
+                <a href="/Admin/Users/Delete/@item.UserID"><span class="fa fa-remove"></span></a>
+            </td>
+        </tr>
+    }
+
+</table>
