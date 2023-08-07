@@ -46,7 +46,7 @@ namespace MyEShop.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive")] Slider slider)
+        public ActionResult Create([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive")] Slider slider, HttpPostedFileBase ImageUP)
         {
             if (ModelState.IsValid)
             {
