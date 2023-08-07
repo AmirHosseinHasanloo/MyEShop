@@ -121,6 +121,10 @@
     <Compile Include="Migrations\202308061050071_Add_SliderTB.designer.cs">
       <DependentUpon>202308061050071_Add_SliderTB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308071303416_Update-Slider.cs" />
+    <Compile Include="Migrations\202308071303416_Update-Slider.designer.cs">
+      <DependentUpon>202308071303416_Update-Slider.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Features.cs" />
     <Compile Include="Models\OrderDetails.cs" />
@@ -185,6 +189,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308061050071_Add_SliderTB.resx">
       <DependentUpon>202308061050071_Add_SliderTB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308071303416_Update-Slider.resx">
+      <DependentUpon>202308071303416_Update-Slider.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

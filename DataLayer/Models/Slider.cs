@@ -17,6 +17,11 @@ namespace DataLayer
         [MaxLength(350, ErrorMessage = "عنوان اسلایدر حداکثر میتواند دارای 350 کاراکتر باشد")]
         public string Title { get; set; }
 
+        [Display(Name = "لینک")]
+        [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+        [MaxLength(450, ErrorMessage = "لینک اسلایدر حداکثر میتواند دارای 450 کاراکتر باشد")]
+        public string Url { get; set; }
+
         [Display(Name = "تصویر اسلایدر")]
         public string ImageName { get; set; }
 
