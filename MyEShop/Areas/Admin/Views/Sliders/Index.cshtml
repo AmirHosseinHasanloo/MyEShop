@@ -8,6 +8,7 @@
 <div class="col-md-12 text-center">
     <div class="alert alert-info">
         <p style="font-size:25px;">مدیریت اسلایدر ها</p>
+        <br />
     </div>
 </div>
 
@@ -19,8 +20,12 @@
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
+
         <th>
             @Html.DisplayNameFor(model => model.ImageName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.StartDate)
@@ -39,8 +44,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
+
         <td class="col-md-3">
             <img src="/Images/SliderImages/@item.ImageName" class="col-md-10 thumbnail" alt="@item.Title" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Url)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.StartDate)
@@ -52,9 +61,9 @@
             @Html.DisplayFor(modelItem => item.IsActive)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.SlideID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.SlideID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.SlideID })
+            @Html.ActionLink("Edit", "Edit", new { id = item.SlideID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.SlideID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.SlideID })
         </td>
     </tr>
 }

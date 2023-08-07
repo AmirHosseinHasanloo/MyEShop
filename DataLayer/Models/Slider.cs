@@ -20,6 +20,7 @@ namespace DataLayer
         [Display(Name = "لینک")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(450, ErrorMessage = "لینک اسلایدر حداکثر میتواند دارای 450 کاراکتر باشد")]
+        [Url(ErrorMessage ="آدرس وارد شده معتبر نمی باشد")]
         public string Url { get; set; }
 
         [Display(Name = "تصویر اسلایدر")]

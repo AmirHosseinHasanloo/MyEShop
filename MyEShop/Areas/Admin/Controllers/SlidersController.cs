@@ -48,7 +48,7 @@ namespace MyEShop.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,ImageUP")] Slider slider, HttpPostedFileBase ImageUP)
+        public ActionResult Create([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,Url,ImageUP")] Slider slider, HttpPostedFileBase ImageUP)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace MyEShop.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,ImageUP")] Slider slider,HttpPostedFileBase ImageUP)
+        public ActionResult Edit([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,Url,ImageUP")] Slider slider,HttpPostedFileBase ImageUP)
         {
             if (ModelState.IsValid)
             {
