@@ -53,19 +53,19 @@
     <header class="header-site">
         <div class="container">
             <div class="col-md-5 col-sm-5 col-5 col-xs-5 logo-layer">
-              
+
                 <div class="col-md-12 col-sm-12 col-12 col-xs-12 mylogo">
                     <h1>فروشگاه <span>اینترنتی</span> </h1>
                     <h2 class="text-center col-md-5 col-sm-5 col-5 col-xs-5"><p class="text-info">ای شاپ</p></h2>
                 </div>
             </div>
-            
+
             <div class="col-md-7 col-sm-7 col-7 col-xs-7 left-header-site">
                 <h5> پشتیبانــــی 24 ساعتـــــه </h5>
                 <h3> 09124140939 <i class="icon-phone"></i></h3>
             </div>
             <div class="clearfix"></div>
-        </div>     
+        </div>
     </header>
     <!-- End site Header -->
     <!-- Mega Menu -->
@@ -110,26 +110,9 @@
             </div>
             <!-- End Basket -->
             <!-- compare -->
-            <section class="border-radius compare-side">
-                <header><h3> لیست مقایسه </h3></header>
-                <article>
-                    <ul>
-                        <li>
-                            <i class="delete-compare">X</i>
-                            <a href="">محصول شماره یک </a>
-                        </li>
-                        <li>
-                            <i class="delete-compare">X</i>
-                            <a href="">محصول شماره یک </a>
-                        </li>
-                        <li>
-                            <i class="delete-compare">X</i>
-                            <a href="">محصول شماره یک </a>
-                        </li>
-                    </ul>
-                    <a href="" class="show-compare-list border-radius">مشاهده لیست مقایسه</a>
-                </article>
-            </section>
+            <div id="compare">
+                @Html.Action("ListCompare", "Compare")
+            </div>
             <!-- End compare -->
             <!-- Category -->
             @Html.Action("ShowGroups", "Prouduct")
@@ -228,5 +211,6 @@
     <script src="~/Content/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Content/js/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Content/js/ShopBasketCount.js"></script>
+    <script src="~/Content/js/CompareBox.js"></script>
 </body>
 </html>

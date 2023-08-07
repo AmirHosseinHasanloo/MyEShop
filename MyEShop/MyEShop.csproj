@@ -1317,6 +1317,7 @@
     <Compile Include="Areas\Admin\Controllers\ProductsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SlidersController.cs" />
     <Compile Include="Controllers\BasketApiController.cs" />
+    <Compile Include="Controllers\CompareController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\UserPanel\Controllers\UserAccountController.cs" />
@@ -1460,6 +1461,7 @@
     <Content Include="Views\ShopCart\ShowCart.cshtml" />
     <Content Include="Views\ShopCart\Index.cshtml" />
     <Content Include="Views\ShopCart\ListOrder.cshtml" />
+    <Content Include="Views\Compare\ListCompare.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
