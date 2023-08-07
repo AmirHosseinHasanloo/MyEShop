@@ -21,9 +21,11 @@ namespace DataLayer
         public string ImageName { get; set; }
 
         [Display(Name = "تاریخ شروع نمایش")]
+        [DisplayFormat(DataFormatString ="{0 :yyyy/MM/dd}",ApplyFormatInEditMode =true)]
         public DateTime StartDate { get; set; }
 
         [Display(Name = "تاریخ اتمام نمایش")]
+        [DisplayFormat(DataFormatString = "{0 :yyyy/MM/dd}",ApplyFormatInEditMode =true)]
         public DateTime EndDate { get; set; }
 
         [Display(Name = "فعال/غیر فعال")]

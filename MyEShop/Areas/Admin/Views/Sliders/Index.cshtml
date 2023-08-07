@@ -39,8 +39,8 @@
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImageName)
+        <td class="col-md-3">
+            <img src="/Images/SliderImages/@item.ImageName" class="col-md-10 thumbnail" alt="@item.Title" />
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.StartDate)

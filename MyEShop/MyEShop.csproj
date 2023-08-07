@@ -1473,6 +1473,7 @@
     <Folder Include="Areas\Admin\Views\Search\" />
     <Folder Include="Areas\UserPanel\Data\" />
     <Folder Include="Areas\UserPanel\Views\Shared\" />
+    <Folder Include="Images\SliderImages\" />
     <Folder Include="Models\" />
     <Folder Include="Views\UserAccount\" />
   </ItemGroup>

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DataLayer;
+using KooyWebApp_MVC.Classes;
 
 namespace MyEShop.Areas.Admin.Controllers
 {
@@ -46,10 +48,17 @@ namespace MyEShop.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive")] Slider slider, HttpPostedFileBase ImageUP)
+        public ActionResult Create([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,ImageUP")] Slider slider, HttpPostedFileBase ImageUP)
         {
             if (ModelState.IsValid)
             {
+                if (ImageUP == null)
+                {
+                    ModelState.AddModelError("ImageName", "لطفا تصویر را انتخاب کنید");
+                    return View(slider);
+                }
+                slider.ImageName = Guid.NewGuid().ToString() + Path.GetExtension(ImageUP.FileName);
+                ImageUP.SaveAs(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
                 db.Slider.Add(slider);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -78,10 +87,16 @@ namespace MyEShop.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive")] Slider slider)
+        public ActionResult Edit([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,ImageUP")] Slider slider,HttpPostedFileBase ImageUP)
         {
             if (ModelState.IsValid)
             {
+                if (ImageUP != null)
+                {
+                    System.IO.File.Delete(Server.MapPath("/Images/SliderImages/"+slider.ImageName));
+                    slider.ImageName = Guid.NewGuid().ToString() + Path.GetExtension(ImageUP.FileName);
+                    ImageUP.SaveAs(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
+                }
                 db.Entry(slider).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -110,6 +125,7 @@ namespace MyEShop.Areas.Admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Slider slider = db.Slider.Find(id);
+            System.IO.File.Delete(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
             db.Slider.Remove(slider);
             db.SaveChanges();
             return RedirectToAction("Index");
