@@ -26,8 +26,8 @@ namespace MyEShop.Controllers
 
             foreach (var item in ComList)
             {
-               features.AddRange(db.Product_Features.Where(p=>p.ProductID==item.ProductID).Select(p=>p.Features).ToList());
-                productsFeature.AddRange(db.Product_Features.Where(p=>p.ProductID==item.ProductID).ToList());
+                features.AddRange(db.Product_Features.Where(p => p.ProductID == item.ProductID).Select(p => p.Features).ToList());
+                productsFeature.AddRange(db.Product_Features.Where(p => p.ProductID == item.ProductID).ToList());
             }
             ViewBag.Features = features.Distinct().ToList();
             ViewBag.ProductFeatures = productsFeature;
