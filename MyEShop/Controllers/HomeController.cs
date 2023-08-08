@@ -30,15 +30,20 @@ namespace MyEShop.Controllers
 
         public ActionResult Visitsite()
         {
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
-            DateTime Yesterday = dt.AddDays(1);
+            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0); 
+            DateTime Yesterday = dt.AddDays(-1);
+            DateTime LastMonth = dt.AddDays(-30);
+            DateTime LastYear = dt.AddDays(-365);
+
 
             SiteVisitViewModel Visit = new SiteVisitViewModel();
             Visit.VisitSum = db.SiteVisit.Count();
             Visit.VisitToDay = db.SiteVisit.Count(v => v.VisitDate == dt);
             Visit.VisitYesterday = db.SiteVisit.Count(v => v.VisitDate == Yesterday);
+            Visit.VisitInLastMonth = db.SiteVisit.Count(v => v.VisitDate == LastMonth);
+            Visit.VisitInLastYear = db.SiteVisit.Count(v => v.VisitDate == LastYear);
 
-            return PartialView();
+            return PartialView(Visit);
         }
 
     }

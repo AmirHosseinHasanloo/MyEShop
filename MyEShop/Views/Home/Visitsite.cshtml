@@ -1,0 +1,16 @@
+﻿@model DataLayer.SiteVisitViewModel
+
+<div class="thumbnail">
+    <dl class="dl-horizontal">
+        <dt><span class="fa fa-clock-o"></span> بازدید امروز :</dt>
+        <dd class="text-primary">@Model.VisitToDay</dd>
+        <dt><span class="fa fa-clock-o"></span> بازدید دیروز :</dt>
+        <dd class="text-primary">@Model.VisitYesterday</dd>
+        <dt><span class="fa fa-calendar-times-o"></span> بازدید سی روز گذشته :</dt>
+        <dd class="text-primary">@Model.VisitInLastMonth</dd>
+        <dt><span class="fa fa-calendar"></span> بازدید 1 سال گذشته :</dt>
+        <dd class="text-primary">@Model.VisitInLastYear</dd>
+        <dt><span class="fa fa-calendar-plus-o"></span> بازدید کل :</dt>
+        <dd class="text-primary">@Model.VisitSum</dd>
+    </dl>
+</div>
