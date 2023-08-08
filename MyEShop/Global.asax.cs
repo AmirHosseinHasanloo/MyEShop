@@ -9,6 +9,8 @@ using System.Web.SessionState;
 using System.Web.Http;
 using GSD.Globalization;
 using System.Threading;
+using DataLayer;
+using System.Web.WebSockets;
 
 namespace MyEShop
 {
@@ -30,6 +32,25 @@ namespace MyEShop
         protected void Application_PostAuthorizeRequest()
         {
             System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
+        }
+
+        protected void Session_Start()
+        {
+            string ip = Request.UserHostAddress;
+            DateTime dtNow = new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0);
+            using (MyEshopContext db = new MyEshopContext())
+            {
+                if (!db.SiteVisit.Any(v => v.IP == ip && v.VisitDate == dtNow))
+                {                    
+                    db.SiteVisit.Add(new SiteVisit()
+                    {
+                        VisitDate = DateTime.Now.Date,
+                        IP = ip
+                    });
+
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }

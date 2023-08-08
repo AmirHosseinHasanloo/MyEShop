@@ -158,6 +158,7 @@
     <Compile Include="ViewModels\Product_FeaturesViewModel.cs" />
     <Compile Include="ViewModels\RecoveryPasswordViewModel.cs" />
     <Compile Include="ViewModels\ShopCartViewModel.cs" />
+    <Compile Include="ViewModels\SiteVisitViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
