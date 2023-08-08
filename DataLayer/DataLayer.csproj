@@ -125,6 +125,14 @@
     <Compile Include="Migrations\202308071303416_Update-Slider.designer.cs">
       <DependentUpon>202308071303416_Update-Slider.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308081359073_Insert-SiteVisit_TB.cs" />
+    <Compile Include="Migrations\202308081359073_Insert-SiteVisit_TB.designer.cs">
+      <DependentUpon>202308081359073_Insert-SiteVisit_TB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308081401013_up-again.cs" />
+    <Compile Include="Migrations\202308081401013_up-again.designer.cs">
+      <DependentUpon>202308081401013_up-again.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Features.cs" />
     <Compile Include="Models\OrderDetails.cs" />
@@ -137,6 +145,7 @@
     <Compile Include="Models\Product_Selected_Groups.cs" />
     <Compile Include="Models\Product_Tags.cs" />
     <Compile Include="Models\Roles.cs" />
+    <Compile Include="Models\SiteVisit.cs" />
     <Compile Include="Models\Slider.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
@@ -193,6 +202,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308071303416_Update-Slider.resx">
       <DependentUpon>202308071303416_Update-Slider.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308081359073_Insert-SiteVisit_TB.resx">
+      <DependentUpon>202308081359073_Insert-SiteVisit_TB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308081401013_up-again.resx">
+      <DependentUpon>202308081401013_up-again.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

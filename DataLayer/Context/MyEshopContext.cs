@@ -22,5 +22,7 @@ namespace DataLayer
         public virtual DbSet<Product_Features> Product_Features { get; set; }
         public virtual DbSet<Product_Comments> Product_Comments { get; set; }
         public virtual DbSet<Slider> Slider { get; set; }
+        public virtual DbSet<SiteVisit> SiteVisit { get; set; }
+
     }
 }
