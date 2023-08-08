@@ -1279,6 +1279,7 @@
     <Content Include="Content\img\slider.jpg" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\carousel.js" />
+    <Content Include="Content\js\CompareBox.js" />
     <Content Include="Content\js\jquery-v1.11.3.js" />
     <Content Include="Content\js\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Content\js\jquery.validate.min.js" />
@@ -1462,6 +1463,7 @@
     <Content Include="Views\ShopCart\Index.cshtml" />
     <Content Include="Views\ShopCart\ListOrder.cshtml" />
     <Content Include="Views\Compare\ListCompare.cshtml" />
+    <Content Include="Views\Compare\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

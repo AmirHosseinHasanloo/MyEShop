@@ -9,12 +9,12 @@
                 @foreach (var item in Model)
                 {
                     <li>
-                        <i class="delete-compare">X</i>
+                        <i class="delete-compare" onclick="RemoveFromCompare(@item.ProductID)">X</i>
                         <a href="">@item.Title</a>
                     </li>
                 }
             </ul>
-            <a href="" class="show-compare-list border-radius">مشاهده لیست مقایسه</a>
+            <a href="/Compare" class="show-compare-list border-radius">مشاهده لیست مقایسه</a>
         </article>
     </section>
 

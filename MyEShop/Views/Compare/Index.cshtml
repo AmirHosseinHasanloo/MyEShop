@@ -1,0 +1,58 @@
+﻿@model IEnumerable<DataLayer.CompareItem>
+@{
+    ViewBag.Title = "مقایسه محصولات";
+    Layout = "~/Views/Shared/_DefualtLayout.cshtml";
+}
+
+<div class="compare-page">
+
+    <h6> مقایسه محصولات </h6>
+    @if (Model.Any())
+    {
+        <div class="products-list">
+
+            <div class="col-md-3 col-sm-3 hidden-xs subject-list">
+
+                <div>
+                    <p>تصویر</p>
+                    <p> عنوان :</p>
+                    <p>بلوتوث : </p>
+                    <p> وزن : </p>
+                    <p> ابعاد : </p>
+                    <p> اینترنت : </p>
+                    <p>رنگ : </p>
+                </div>
+
+            </div>
+
+
+            <div class="col-md-9 col-sm-9 col-xs-12 compare-product-list">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <a href="/ShowProduct/@item.ProductID"><img class="thumbnail" style="height:104px" src="/Images/ProductImages/Thumbnail/@item.ImageName"></a>
+                            <h2> @item.Title </h2>
+
+                            @{
+                                List<DataLayer.Features> list = ViewBag.Features as List<DataLayer.Features>;
+                            }
+                            @foreach (var subitem in list)
+                            {
+                                <p><label> @subitem.FeatureTitle  : </label> <span> </span></p>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="clearfix"></div>
+
+            </div>
+
+            <div class="row"></div>
+
+        </div>
+    }
+
+</div>

@@ -13,7 +13,25 @@ namespace MyEShop.Controllers
         MyEshopContext db = new MyEshopContext();
         public ActionResult Index()
         {
-            return View();
+            List<DataLayer.CompareItem> ComList = new List<DataLayer.CompareItem>();
+
+            if (Session["Compare"] != null)
+            {
+                ComList = Session["Compare"] as List<DataLayer.CompareItem>;
+            }
+            List<DataLayer.Features> features = new List<DataLayer.Features>();
+
+            // Product Features 
+            List<Product_Features> productsFeature = new List<Product_Features>();
+
+            foreach (var item in ComList)
+            {
+               features.AddRange(db.Product_Features.Where(p=>p.ProductID==item.ProductID).Select(p=>p.Features).ToList());
+                productsFeature.AddRange(db.Product_Features.Where(p=>p.ProductID==item.ProductID).ToList());
+            }
+            ViewBag.Features = features.Distinct().ToList();
+            ViewBag.ProductFeatures = productsFeature;
+            return View(ComList);
         }
 
         public ActionResult AddToCompare(int id)
@@ -35,7 +53,7 @@ namespace MyEShop.Controllers
                 });
             }
             Session["Compare"] = ComList;
-            return PartialView("ListCompare",ComList);
+            return PartialView("ListCompare", ComList);
         }
 
         public ActionResult ListCompare()
@@ -47,6 +65,20 @@ namespace MyEShop.Controllers
                 ComList = Session["Compare"] as List<DataLayer.CompareItem>;
             }
             return PartialView(ComList);
+        }
+
+        public ActionResult DeleteFromCompare(int id)
+        {
+            List<DataLayer.CompareItem> ComList = new List<DataLayer.CompareItem>();
+
+            if (Session["Compare"] != null)
+            {
+                ComList = Session["Compare"] as List<DataLayer.CompareItem>;
+                int delete = ComList.FindIndex(c => c.ProductID == id);
+                ComList.RemoveAt(delete);
+                Session["Compare"] = ComList;
+            }
+            return PartialView("ListCompare", ComList);
         }
 
     }
