@@ -41,7 +41,7 @@ namespace MyEShop.Areas.Admin.Controllers
         // GET: Admin/Users/Create
         public ActionResult Create()
         {
-            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RileTitle");
+            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RoleTitle");
             return View();
         }
 
@@ -62,7 +62,7 @@ namespace MyEShop.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RileTitle", users.RoleID);
+            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RoleTitle", users.RoleID);
             return View(users);
         }
 

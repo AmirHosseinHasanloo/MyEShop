@@ -103,10 +103,17 @@
         <aside class="col-md-3 col-sm-4 right-side-content">
             @if (User.Identity.IsAuthenticated)
             {
+
+
                 <section class="border-radius category-side">
                     <header><h3> پنل کاربری </h3></header>
                     <article>
                         <ul class="child-category-menu">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li><h2><span class="fa fa-dot-circle-o"></span> <a href="/admin"><span>پنل ادمین</span></a></h2></li>
+                                <br />
+                            }
 
                             <li><h2><span class="fa fa-dot-circle-o"></span> <a href="/UserPanel/UserAccount/ChangePassword"><span>تغییر رمز عبور</span></a></h2></li>
                             <br />
