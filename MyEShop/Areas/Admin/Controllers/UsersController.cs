@@ -11,7 +11,7 @@ using DataLayer;
 
 namespace MyEShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private MyEshopContext db = new MyEshopContext();

@@ -18,10 +18,11 @@ namespace MyEShop
     {
         void Application_Start(object sender, EventArgs e)
         {
+            HttpContext.Current.Application["Online"] = 0;
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
@@ -36,12 +37,17 @@ namespace MyEShop
 
         protected void Session_Start()
         {
+            // Calcuting Online Users On WebSite
+            int online = int.Parse(HttpContext.Current.Application["Online"].ToString());
+            online += 1;
+            HttpContext.Current.Application["Online"] = online;
+
             string ip = Request.UserHostAddress;
-            DateTime dtNow = new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0);
+            DateTime dtNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             using (MyEshopContext db = new MyEshopContext())
             {
                 if (!db.SiteVisit.Any(v => v.IP == ip && v.VisitDate == dtNow))
-                {                    
+                {
                     db.SiteVisit.Add(new SiteVisit()
                     {
                         VisitDate = DateTime.Now.Date,
@@ -51,6 +57,13 @@ namespace MyEShop
                     db.SaveChanges();
                 }
             }
+        }
+
+        protected void Session_End()
+        {
+            int online = int.Parse(HttpContext.Current.Application["Online"].ToString());
+            online -= 1;
+            HttpContext.Current.Application["Online"] = online;
         }
     }
 }

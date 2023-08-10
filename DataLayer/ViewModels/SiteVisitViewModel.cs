@@ -13,5 +13,6 @@ namespace DataLayer
         public int VisitInLastMonth { get; set; }
         public int VisitInLastYear { get; set; }
         public int VisitSum { get; set; }
+        public int Online { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace MyEShop.Controllers
             Visit.VisitYesterday = db.SiteVisit.Count(v => v.VisitDate == Yesterday);
             Visit.VisitInLastMonth = db.SiteVisit.Count(v => v.VisitDate == LastMonth);
             Visit.VisitInLastYear = db.SiteVisit.Count(v => v.VisitDate == LastYear);
+            Visit.Online  = int.Parse(HttpContext.Application["Online"].ToString());
 
             return PartialView(Visit);
         }

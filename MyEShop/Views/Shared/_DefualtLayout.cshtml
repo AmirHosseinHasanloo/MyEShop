@@ -101,25 +101,38 @@
 
     <div class="container margin-top-25">
         <aside class="col-md-3 col-sm-4 right-side-content">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <section class="border-radius category-side">
+                    <header><h3> پنل کاربری </h3></header>
+                    <article>
+                        <ul class="child-category-menu">
 
+                            <li><h2><span class="fa fa-dot-circle-o"></span> <a href="/UserPanel/UserAccount/ChangePassword"><span>تغییر رمز عبور</span></a></h2></li>
+                            <br />
+                            <li><h2><span class="fa fa-dot-circle-o"></span> <a href="/ShopCart"><span>فاکتور های جاری</span></a></h2></li>
+                        </ul>
+                    </article>
+                </section>
+            }
             @RenderSection("Fillter", false)
 
             <!-- Basket -->
             <div id="ShowCart">
-                @Html.Action("ShowCart", "ShopCart")
+                @Html.Action("ShowCart", "ShopCart", new { area = "" })
             </div>
             <!-- End Basket -->
             <!-- compare -->
             <div id="compare">
-                @Html.Action("ListCompare", "Compare")
+                @Html.Action("ListCompare", "Compare", new { area = "" })
             </div>
             <!-- End compare -->
             <!-- Category -->
-            @Html.Action("ShowGroups", "Prouduct")
+            @Html.Action("ShowGroups", "Prouduct", new { area = "" })
             <!-- End Category -->
             <!-- Category -->
             <!-- End Category -->
-            @Html.Action("Visitsite", "Home")
+            @Html.Action("Visitsite", "Home", new { area = "" })
         </aside>
         <div class="col-md-9 col-sm-8 left-side-content">
 

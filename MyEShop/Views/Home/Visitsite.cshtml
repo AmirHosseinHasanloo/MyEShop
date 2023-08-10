@@ -1,7 +1,9 @@
 ﻿@model DataLayer.SiteVisitViewModel
 
 <div class="thumbnail">
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal child-category-menu">
+        <dt><span class="fa fa-eye"></span> در حال بازدید :</dt>
+        <dd class="text-primary">@Model.Online</dd>
         <dt><span class="fa fa-clock-o"></span> بازدید امروز :</dt>
         <dd class="text-primary">@Model.VisitToDay</dd>
         <dt><span class="fa fa-clock-o"></span> بازدید دیروز :</dt>
