@@ -33,7 +33,7 @@ namespace InsertShowImage
             /// </summary>
             public ImageResizer()
             {
-                MaxX = MaxY = 600;
+                MaxX = MaxY = 900;
                 TrimImage = false;
                 SaveFormat = ImageFormat.Jpeg;
             }
