@@ -13,7 +13,7 @@ namespace MyEShop.Areas.Admin.Controllers
 {
     public class ProductGroupsController : Controller
     {
-        private MyEshopContext db = new MyEshopContext();
+       private UnitOfWork db =new UnitOfWork();
 
         // GET: Admin/ProductGroups
         public ActionResult Index()
@@ -23,7 +23,7 @@ namespace MyEShop.Areas.Admin.Controllers
 
         public ActionResult ListGroups()
         {
-            var product_Groups = db.Product_Groups;
+            var product_Groups = db.Product_GroupsRepository.GetAll();
             return PartialView(product_Groups.ToList());
         }
 
@@ -34,7 +34,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product_Groups product_Groups = db.Product_Groups.Find(id);
+            Product_Groups product_Groups = db.Product_GroupsRepository.GetById(id.Value);
             if (product_Groups == null)
             {
                 return HttpNotFound();
@@ -60,12 +60,12 @@ namespace MyEShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Product_Groups.Add(product_Groups);
-                db.SaveChanges();
-                return PartialView("ListGroups", db.Product_Groups.Where(p => p.ParentID== null));
+                db.Product_GroupsRepository.Insert(product_Groups);
+                db.Save();
+                return PartialView("ListGroups", db.Product_GroupsRepository.GetAll().Where(p => p.ParentID== null));
             }
 
-            ViewBag.ParentID = new SelectList(db.Product_Groups, "GroupID", "GroupTitle", product_Groups.ParentID);
+            ViewBag.ParentID = new SelectList(db.Product_GroupsRepository.GetAll(), "GroupID", "GroupTitle", product_Groups.ParentID);
             return View(product_Groups);
         }
 
@@ -76,7 +76,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product_Groups product_Groups = db.Product_Groups.Find(id);
+            Product_Groups product_Groups = db.Product_GroupsRepository.GetById(id.Value);
             if (product_Groups == null)
             {
                 return HttpNotFound();
@@ -93,28 +93,28 @@ namespace MyEShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(product_Groups).State = EntityState.Modified;
-                db.SaveChanges();
-                return PartialView("ListGroups", db.Product_Groups.Where(p => p.ParentID == null));
+                db.Product_GroupsRepository.Update(product_Groups);
+                db.Save();
+                return PartialView("ListGroups", db.Product_GroupsRepository.GetAll().Where(p => p.ParentID == null));
             }
-            ViewBag.ParentID = new SelectList(db.Product_Groups, "GroupID", "GroupTitle", product_Groups.ParentID);
+            ViewBag.ParentID = new SelectList(db.Product_GroupsRepository.GetAll(), "GroupID", "GroupTitle", product_Groups.ParentID);
             return View(product_Groups);
         }
 
         // GET: Admin/ProductGroups/Delete/5
         public void Delete(int? id)
         {
-            var group = db.Product_Groups.ToList();
+            var group = db.Product_GroupsRepository.GetAll().ToList();
             if (group.Any(G => G.ParentID == G.GroupID))
             {
-                foreach (var SubGroups in db.Product_Groups.Where(G => G.GroupID == G.ParentID))
+                foreach (var SubGroups in db.Product_GroupsRepository.GetAll().Where(G => G.GroupID == G.ParentID))
                 {
-                    db.Product_Groups.Remove(SubGroups);
+                    db.Product_GroupsRepository.Delete(SubGroups);
                 }
             }
-            var GroupItem = db.Product_Groups.Find(id);
-            db.Product_Groups.Remove(GroupItem);
-            db.SaveChanges();
+            var GroupItem = db.Product_GroupsRepository.GetById(id.Value);
+            db.Product_GroupsRepository.Delete(GroupItem);
+            db.Save();
         }
 
         // POST: Admin/ProductGroups/Delete/5
@@ -122,9 +122,9 @@ namespace MyEShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product_Groups product_Groups = db.Product_Groups.Find(id);
-            db.Product_Groups.Remove(product_Groups);
-            db.SaveChanges();
+            Product_Groups product_Groups = db.Product_GroupsRepository.GetById(id);
+            db.Product_GroupsRepository.Delete(product_Groups);
+            db.Save();
             return RedirectToAction("Index");
         }
 

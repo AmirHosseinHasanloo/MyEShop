@@ -14,13 +14,12 @@ namespace MyEShop.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
-        private MyEshopContext db = new MyEshopContext();
+        private UnitOfWork db = new UnitOfWork();
 
         // GET: Admin/Users
         public ActionResult Index()
         {
-            var users = db.Users.Include(u => u.Roles);
-            return View(users.ToList());
+            return View(db.UsersRepository.GetAll().ToList());
         }
 
         // GET: Admin/Users/Details/5
@@ -30,7 +29,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users users = db.Users.Find(id);
+            Users users = db.UsersRepository.GetById(id.Value);
             if (users == null)
             {
                 return HttpNotFound();
@@ -41,7 +40,7 @@ namespace MyEShop.Areas.Admin.Controllers
         // GET: Admin/Users/Create
         public ActionResult Create()
         {
-            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RoleTitle");
+            ViewBag.RoleID = new SelectList(db.RolesRepository.GetAll(), "RoleID", "RoleTitle");
             return View();
         }
 
@@ -57,12 +56,12 @@ namespace MyEShop.Areas.Admin.Controllers
                 users.RegisterDate = DateTime.Now;
                 users.ActiveCode = Guid.NewGuid().ToString();
                 users.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(users.Password, "MD5");
-                db.Users.Add(users);
-                db.SaveChanges();
+                db.UsersRepository.Insert(users);
+                db.UsersRepository.Save();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RoleTitle", users.RoleID);
+            ViewBag.RoleID = new SelectList(db.RolesRepository.GetAll(), "RoleID", "RoleTitle", users.RoleID);
             return View(users);
         }
 
@@ -73,12 +72,12 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users users = db.Users.Find(id);
+            Users users = db.UsersRepository.GetById(id.Value);
             if (users == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RoleTitle", users.RoleID);
+            ViewBag.RoleID = new SelectList(db.RolesRepository.GetAll(), "RoleID", "RoleTitle", users.RoleID);
             return View(users);
         }
 
@@ -92,11 +91,11 @@ namespace MyEShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 users.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(users.Password, "MD5");
-                db.Entry(users).State = EntityState.Modified;
-                db.SaveChanges();
+                db.UsersRepository.Update(users);
+                db.UsersRepository.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.RoleID = new SelectList(db.Roles, "RoleID", "RileTitle", users.RoleID);
+            ViewBag.RoleID = new SelectList(db.RolesRepository.GetAll(), "RoleID", "RileTitle", users.RoleID);
             return View(users);
         }
 
@@ -107,7 +106,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users users = db.Users.Find(id);
+            Users users = db.UsersRepository.GetById(id.Value);
             if (users == null)
             {
                 return HttpNotFound();
@@ -120,15 +119,15 @@ namespace MyEShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Users users = db.Users.Find(id);
-            db.Users.Remove(users);
-            db.SaveChanges();
+            Users users = db.UsersRepository.GetById(id);
+            db.UsersRepository.Delete(users);
+            db.UsersRepository.Save();
             return RedirectToAction("Index");
         }
 
         public ActionResult Admins()
         {
-            return View(db.Users.Where(U=>U.RoleID==2).ToList());
+            return View(db.UsersRepository.GetAll().Where(u => u.RoleID == 2));
         }
 
         protected override void Dispose(bool disposing)

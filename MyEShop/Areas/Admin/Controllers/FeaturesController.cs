@@ -12,12 +12,12 @@ namespace MyEShop.Areas.Admin.Controllers
 {
     public class FeaturesController : Controller
     {
-        private MyEshopContext db = new MyEshopContext();
+        UnitOfWork db = new UnitOfWork();
 
         // GET: Admin/Features
         public ActionResult Index()
         {
-            return View(db.Features.ToList());
+            return View(db.FeaturesRepository.GetAll());
         }
 
         // GET: Admin/Features/Details/5
@@ -27,7 +27,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Features features = db.Features.Find(id);
+            Features features = db.FeaturesRepository.GetById(id);
             if (features == null)
             {
                 return HttpNotFound();
@@ -50,8 +50,8 @@ namespace MyEShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Features.Add(features);
-                db.SaveChanges();
+                db.FeaturesRepository.Insert(features);
+                db.Save();
                 return RedirectToAction("Index");
             }
 
@@ -65,7 +65,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Features features = db.Features.Find(id);
+            Features features = db.FeaturesRepository.GetById(id);
             if (features == null)
             {
                 return HttpNotFound();
@@ -82,8 +82,8 @@ namespace MyEShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(features).State = EntityState.Modified;
-                db.SaveChanges();
+                db.FeaturesRepository.Update(features);
+                db.Save();
                 return RedirectToAction("Index");
             }
             return View(features);
@@ -96,7 +96,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Features features = db.Features.Find(id);
+            Features features = db.FeaturesRepository.GetById(id.Value);
             if (features == null)
             {
                 return HttpNotFound();
@@ -109,17 +109,17 @@ namespace MyEShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Features features = db.Features.Find(id);
-            db.Features.Remove(features);
-            db.SaveChanges();
+            Features features = db.FeaturesRepository.GetById(id);
+            db.FeaturesRepository.Delete(features);
+            db.Save();
             return RedirectToAction("Index");
         }
 
         public void DeleteFeatures(int? id)
         {
-            var Delete = db.Product_Features.Find(id);
-            db.Product_Features.Remove(Delete);
-            db.SaveChanges();
+            var Delete = db.FeaturesRepository.GetById(id);
+            db.FeaturesRepository.Insert(Delete);
+            db.Save();
         }
 
         protected override void Dispose(bool disposing)

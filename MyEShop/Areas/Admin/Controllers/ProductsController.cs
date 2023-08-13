@@ -14,14 +14,24 @@ namespace MyEShop.Areas.Admin.Controllers
 {
     public class ProductsController : Controller
     {
-        private MyEshopContext db = new MyEshopContext();
+        private MyEshopContext _db = new MyEshopContext();
+        private UnitOfWork db = new UnitOfWork();
+
+        IProductTagsRepository productTagsRepository;
+        IProduct_Selected_GroupsRepository selectedGroupsRepository;
+        public ProductsController()
+        {
+            productTagsRepository = new ProductTagsRepository(_db);
+            selectedGroupsRepository = new Product_Selected_GroupsRepository(_db);
+        }
+
 
         #region Index-Create-Edit-Delete
 
         // GET: Admin/Products
         public ActionResult Index()
         {
-            return View(db.Products.ToList());
+            return View(db.ProductsRepository.GetAll());
         }
 
         // GET: Admin/Products/Details/5
@@ -31,7 +41,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Products products = db.Products.Find(id);
+            Products products = db.ProductsRepository.GetById(id);
             if (products == null)
             {
                 return HttpNotFound();
@@ -42,7 +52,7 @@ namespace MyEShop.Areas.Admin.Controllers
         // GET: Admin/Products/Create
         public ActionResult Create()
         {
-            ViewBag.Groups = db.Product_Groups.ToList();
+            ViewBag.Groups = db.Product_GroupsRepository.GetAll();
             return View();
         }
 
@@ -58,7 +68,7 @@ namespace MyEShop.Areas.Admin.Controllers
                 if (selectedGroups == null)
                 {
                     ViewBag.Error = true;
-                    ViewBag.Groups = db.Product_Groups.ToList();
+                    ViewBag.Groups = db.Product_GroupsRepository.GetAll();
                     return View(products);
                 }
                 products.ImageName = "No_images_available.png";
@@ -75,29 +85,29 @@ namespace MyEShop.Areas.Admin.Controllers
                     string[] Tags = tags.Split(',');
                     foreach (var item in Tags)
                     {
-                        db.Product_Tags.Add(new Product_Tags()
+                        db.Product_TagsRepository.Insert(new Product_Tags()
                         {
                             ProductID = products.ProductID,
                             Tag = item.Trim()
                         });
                     }
                 }
-                db.Products.Add(products);
+                db.ProductsRepository.Insert(products);
                 if (selectedGroups != null && selectedGroups.Any())
                 {
                     foreach (var selectedGroup in selectedGroups)
                     {
-                        db.Product_Selected_Groups.Add(new Product_Selected_Groups()
+                        db.Product_Selected_GroupsRepository.Insert(new Product_Selected_Groups()
                         {
                             ProductID = products.ProductID,
                             GroupID = selectedGroup
                         });
                     }
                 }
-                db.SaveChanges();
+                db.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.Groups = db.Product_Groups.ToList();
+            ViewBag.Groups = db.Product_GroupsRepository.GetAll();
             return View(products);
         }
 
@@ -108,14 +118,14 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Products products = db.Products.Find(id);
+            Products products = db.ProductsRepository.GetById(id.Value);
             if (products == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Tags = string.Join(",", db.Product_Tags.Where(t => t.ProductID == id).Select(t => t.Tag).ToList());
+            ViewBag.Tags = string.Join(",", db.Product_TagsRepository.GetAll().Where(t => t.ProductID == id).Select(t => t.Tag).ToList());
             ViewBag.Selected_Groups = products.Prodct_Selected_Groups.ToList();
-            ViewBag.Groups = db.Product_Groups.ToList();
+            ViewBag.Groups = db.Product_GroupsRepository.GetAll();
             return View(products);
         }
 
@@ -145,16 +155,17 @@ namespace MyEShop.Areas.Admin.Controllers
 
                 }
 
-                ViewBag.Groups = db.Product_Groups.ToList();
+                ViewBag.Groups = db.Product_GroupsRepository.GetAll();
                 products.CreateDate = DateTime.Now;
 
-                db.Product_Tags.Where(t => t.ProductID == products.ProductID).ToList().ForEach(t => db.Product_Tags.Remove(t));
+                productTagsRepository.UpdateTags(products);
+                productTagsRepository.Save();
                 if (!string.IsNullOrEmpty(Tags))
                 {
                     string[] NewTags = Tags.Split(',');
                     foreach (var WritedTags in NewTags)
                     {
-                        db.Product_Tags.Add(new Product_Tags()
+                        db.Product_TagsRepository.Insert(new Product_Tags()
                         {
                             ProductID = products.ProductID,
                             Tag = WritedTags.Trim(),
@@ -162,23 +173,24 @@ namespace MyEShop.Areas.Admin.Controllers
                     }
                 }
 
-                db.Product_Selected_Groups.Where(ps => ps.ProductID == products.ProductID).ToList().ForEach(ps => db.Product_Selected_Groups.Remove(ps));
+                selectedGroupsRepository.UpdateSelectedGroups(products);
+                selectedGroupsRepository.Save();
                 foreach (var NewSelectedGroups in selectedGroups)
                 {
-                    db.Product_Selected_Groups.Add(new Product_Selected_Groups()
+                    db.Product_Selected_GroupsRepository.Insert(new Product_Selected_Groups()
                     {
                         ProductID = products.ProductID,
                         GroupID = NewSelectedGroups,
                     });
                 }
 
-                db.Entry(products).State = EntityState.Modified;
-                db.SaveChanges();
+                db.ProductsRepository.Update(products);
+                db.Save();
                 return RedirectToAction("Index");
             }
             ViewBag.Tags = Tags;
             ViewBag.Selected_Groups = selectedGroups;
-            ViewBag.Groups = db.Product_Groups.ToList();
+            ViewBag.Groups = db.Product_GroupsRepository.GetAll();
             return View(products);
         }
 
@@ -189,7 +201,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Products products = db.Products.Find(id);
+            Products products = db.ProductsRepository.GetById(id.Value);
             if (products == null)
             {
                 return HttpNotFound();
@@ -202,9 +214,9 @@ namespace MyEShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Products products = db.Products.Find(id);
-            db.Products.Remove(products);
-            db.SaveChanges();
+            Products products = db.ProductsRepository.GetById(id);
+            db.ProductsRepository.Delete(products);
+            db.Save();
             return RedirectToAction("Index");
         }
         #endregion
@@ -212,7 +224,7 @@ namespace MyEShop.Areas.Admin.Controllers
         #region Gallery
         public ActionResult ProductGallery(int id)
         {
-            ViewBag.Galleries = db.Product_Galleries.Where(g => g.ProductID == id).ToList();
+            ViewBag.Galleries = db.Product_GalleriesRepository.GetAll().Where(g => g.ProductID == id).ToList();
             return View(new Product_Galleries()
             {
                 ProductID = id
@@ -231,8 +243,8 @@ namespace MyEShop.Areas.Admin.Controllers
                     ImageResizer img = new ImageResizer();
                     img.Resize(Server.MapPath("/Images/ProductImages/" + gallery.ImageName), Server.MapPath("/Images/ProductImages/Thumbnail/" + gallery.ImageName));
                 }
-                db.Product_Galleries.Add(gallery);
-                db.SaveChanges();
+                db.Product_GalleriesRepository.Insert(gallery);
+                db.Save();
             }
 
             return RedirectToAction("ProductGallery", new { id = gallery.ProductID });
@@ -240,13 +252,13 @@ namespace MyEShop.Areas.Admin.Controllers
 
         public ActionResult DeleteGallery(int id)
         {
-            var picure = db.Product_Galleries.Find(id);
+            var picure = db.Product_GalleriesRepository.GetById(id);
 
             System.IO.File.Delete(Server.MapPath("/Images/ProductImages/" + picure.ImageName));
             System.IO.File.Delete(Server.MapPath("/Images/ProductImages/Thumbnail/" + picure.ImageName));
 
-            db.Product_Galleries.Remove(picure);
-            db.SaveChanges();
+            db.Product_GalleriesRepository.Delete(picure);
+            db.Save();
             return RedirectToAction("ProductGallery", new { id = picure.ProductID });
         }
 
@@ -256,8 +268,8 @@ namespace MyEShop.Areas.Admin.Controllers
         #region Features
         public ActionResult ProductFeatures(int id)
         {
-            ViewBag.Features = db.Product_Features.Where(F => F.ProductID == id).ToList();
-            ViewBag.FeatureID = new SelectList(db.Features, "FeatureID", "FeatureTitle");
+            ViewBag.Features = db.Product_FeaturesRepository.GetAll().Where(F => F.ProductID == id).ToList();
+            ViewBag.FeatureID = new SelectList(_db.Features, "FeatureID", "FeatureTitle");
             return View(new Product_Features()
             {
                 ProductID = id
@@ -268,8 +280,8 @@ namespace MyEShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ProductFeatures(Product_Features model)
         {
-            db.Product_Features.Add(model);
-            db.SaveChanges();
+            db.Product_FeaturesRepository.Insert(model);
+            db.Save();
             return RedirectToAction("ProductFeatures", new { id = model.ProductID });
         }
 

@@ -12,14 +12,15 @@ using KooyWebApp_MVC.Classes;
 
 namespace MyEShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class SlidersController : Controller
     {
-        private MyEshopContext db = new MyEshopContext();
+        private UnitOfWork db = new UnitOfWork();
 
         // GET: Admin/Sliders
         public ActionResult Index()
         {
-            return View(db.Slider.ToList());
+            return View(db.SliderRepository.GetAll());
         }
 
         // GET: Admin/Sliders/Details/5
@@ -29,7 +30,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Slider slider = db.Slider.Find(id);
+            Slider slider = db.SliderRepository.GetById(id);
             if (slider == null)
             {
                 return HttpNotFound();
@@ -59,8 +60,8 @@ namespace MyEShop.Areas.Admin.Controllers
                 }
                 slider.ImageName = Guid.NewGuid().ToString() + Path.GetExtension(ImageUP.FileName);
                 ImageUP.SaveAs(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
-                db.Slider.Add(slider);
-                db.SaveChanges();
+                db.SliderRepository.Insert(slider);
+                db.SliderRepository.Save();
                 return RedirectToAction("Index");
             }
 
@@ -74,7 +75,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Slider slider = db.Slider.Find(id);
+            Slider slider = db.SliderRepository.GetById(id);
             if (slider == null)
             {
                 return HttpNotFound();
@@ -87,18 +88,18 @@ namespace MyEShop.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,Url,ImageUP")] Slider slider,HttpPostedFileBase ImageUP)
+        public ActionResult Edit([Bind(Include = "SlideID,Title,ImageName,StartDate,EndDate,IsActive,Url,ImageUP")] Slider slider, HttpPostedFileBase ImageUP)
         {
             if (ModelState.IsValid)
             {
                 if (ImageUP != null)
                 {
-                    System.IO.File.Delete(Server.MapPath("/Images/SliderImages/"+slider.ImageName));
+                    System.IO.File.Delete(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
                     slider.ImageName = Guid.NewGuid().ToString() + Path.GetExtension(ImageUP.FileName);
                     ImageUP.SaveAs(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
                 }
-                db.Entry(slider).State = EntityState.Modified;
-                db.SaveChanges();
+                db.SliderRepository.Update(slider);
+                db.SliderRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(slider);
@@ -111,7 +112,7 @@ namespace MyEShop.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Slider slider = db.Slider.Find(id);
+            Slider slider = db.SliderRepository.GetById(id);
             if (slider == null)
             {
                 return HttpNotFound();
@@ -124,10 +125,10 @@ namespace MyEShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Slider slider = db.Slider.Find(id);
+            Slider slider = db.SliderRepository.GetById(id);
             System.IO.File.Delete(Server.MapPath("/Images/SliderImages/" + slider.ImageName));
-            db.Slider.Remove(slider);
-            db.SaveChanges();
+            db.SliderRepository.Delete(slider);
+            db.SliderRepository.Save();
             return RedirectToAction("Index");
         }
 
