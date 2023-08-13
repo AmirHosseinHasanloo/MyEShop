@@ -1329,7 +1329,6 @@
     <Compile Include="Controllers\ManageEmailsController.cs" />
     <Compile Include="Controllers\ProuductController.cs" />
     <Compile Include="Controllers\ShopCartController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="EShopRoleProvider\EShopRoleProvider.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

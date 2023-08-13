@@ -11,14 +11,27 @@ namespace MyEShop.Controllers
 {
     public class ProuductController : Controller
     {
-        MyEshopContext db = new MyEshopContext();
+        private MyEshopContext dbContext = new MyEshopContext();
+        private UnitOfWork _db = new UnitOfWork();
+
+        // Repositories
+        IProductRepository productRepository;
+        IProduct_FeaturesRepository featuresRepository;
+
+        public ProuductController()
+        {
+            productRepository = new ProductRepository(dbContext);
+            featuresRepository = new Product_FeaturesRepository(dbContext);
+        }
+
+
         public ActionResult ShowGroups()
         {
-            return PartialView(db.Product_Groups.ToList());
+            return PartialView(_db.Product_GroupsRepository.GetAll().ToList());
         }
         public ActionResult LastProducts()
         {
-            return PartialView(db.Products.OrderByDescending(P => P.CreateDate).Take(12).ToList());
+            return PartialView(productRepository.LastProducts());
         }
 
         [Route("ShowProduct/{id}")]
@@ -28,18 +41,14 @@ namespace MyEShop.Controllers
             {
                 return HttpNotFound();
             }
-            var ProductPage = db.Products.Find(id);
-            ViewBag.ProductFeatures = ProductPage.Product_Features.DistinctBy(F => F.FeatureID).Select(F => new ShowProductFeatureViewModel()
-            {
-                FeatureTitle = F.Features.FeatureTitle,
-                Values = db.Product_Features.Where(PF => PF.FeatureID == F.FeatureID && PF.ProductID == id).Select(PF => PF.Value).ToList()
-            }).ToList();
+            var ProductPage = _db.ProductsRepository.GetById(id.Value);
+            ViewBag.ProductFeatures = featuresRepository.Get_Features(id.Value);
             return View(ProductPage);
         }
 
         public ActionResult ShowComments(int id)
         {
-            return PartialView(db.Product_Comments.Where(P => P.ProductID == id).ToList());
+            return PartialView(_db.Product_CommentsRepository.GetAll().Where(P => P.ProductID == id).ToList());
         }
 
         public ActionResult CreateComment(int id)
@@ -56,10 +65,10 @@ namespace MyEShop.Controllers
             if (ModelState.IsValid)
             {
                 product_Comments.CreateDate = DateTime.Now;
-                db.Product_Comments.Add(product_Comments);
-                db.SaveChanges();
+                _db.Product_CommentsRepository.Insert(product_Comments);
+                _db.Save();
 
-                return PartialView("ShowComments", db.Product_Comments.Where(P => P.ProductID == product_Comments.ProductID).ToList());
+                return PartialView("ShowComments", _db.Product_CommentsRepository.GetAll().Where(P => P.ProductID == product_Comments.ProductID).ToList());
             }
             return PartialView(product_Comments);
         }
@@ -67,7 +76,7 @@ namespace MyEShop.Controllers
         [Route("Archive")]
         public ActionResult ProductArchive(int pageId = 1, string title = "", int minPrice = 0, int maxPrice = 0, List<int> selectedGroup = null)
         {
-            ViewBag.groups = db.Product_Groups.ToList();
+            ViewBag.groups = _db.Product_GroupsRepository.GetAll();
 
             List<Products> List = new List<Products>();
 
@@ -77,13 +86,13 @@ namespace MyEShop.Controllers
             {
                 foreach (var group in selectedGroup)
                 {
-                    List.AddRange(db.Product_Selected_Groups.Where(g => g.GroupID == group).Select(g => g.Products).ToList());
+                    List.AddRange(_db.Product_Selected_GroupsRepository.GetAll().Where(g => g.GroupID == group).Select(g => g.Products).ToList());
                 }
                 List = List.Distinct().ToList();
             }
             else
             {
-                List.AddRange(db.Products.ToList());
+                List.AddRange(_db.ProductsRepository.GetAll());
             }
 
             if (title != null)

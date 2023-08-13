@@ -10,7 +10,7 @@ namespace MyEShop.Controllers
     public class CompareController : Controller
     {
         // GET: Compare
-        MyEshopContext db = new MyEshopContext();
+        private UnitOfWork _db = new UnitOfWork();
         public ActionResult Index()
         {
             List<DataLayer.CompareItem> ComList = new List<DataLayer.CompareItem>();
@@ -26,8 +26,8 @@ namespace MyEShop.Controllers
 
             foreach (var item in ComList)
             {
-                features.AddRange(db.Product_Features.Where(p => p.ProductID == item.ProductID).Select(p => p.Features).ToList());
-                productsFeature.AddRange(db.Product_Features.Where(p => p.ProductID == item.ProductID).ToList());
+                features.AddRange(_db.Product_FeaturesRepository.GetAll().Where(p => p.ProductID == item.ProductID).Select(p => p.Features).ToList());
+                productsFeature.AddRange(_db.Product_FeaturesRepository.GetAll().Where(p => p.ProductID == item.ProductID).ToList());
             }
             ViewBag.Features = features.Distinct().ToList();
             ViewBag.ProductFeatures = productsFeature;
@@ -44,7 +44,7 @@ namespace MyEShop.Controllers
             }
             if (!ComList.Any(p => p.ProductID == id))
             {
-                var Product = db.Products.Where(p => p.ProductID == id).Select(p => new { p.Title, p.ImageName }).Single();
+                var Product = _db.ProductsRepository.GetAll().Where(p => p.ProductID == id).Select(p => new { p.Title, p.ImageName }).Single();
                 ComList.Add(new DataLayer.CompareItem()
                 {
                     ProductID = id,

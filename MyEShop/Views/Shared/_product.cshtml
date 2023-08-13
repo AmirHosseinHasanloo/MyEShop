@@ -1,15 +1,15 @@
 ﻿@model DataLayer.Products
-<div class="col-md-4 col-sm-6">
+<div class="col-md-4 col-sm-6 col-12">
     <div class="border-radius">
-        <span class="img-responsive">
-            <img class="Thumb" src="/Images/ProductImages/Thumbnail/@Model.ImageName">
+        <span class="img-responsive" style="margin-top:1%;">
+            <img class="Thumb img-rounded" src="/Images/ProductImages/Thumbnail/@Model.ImageName">
         </span>
         <h2>
             <a href="/ShowProduct/@Model.ProductID">
                 @Model.Title
             </a>
         </h2>
-        <h6>افزودن به لیست مقایسه <input type="checkbox"  onchange="AddToCompare(@Model.ProductID)"></h6>
+        <h6>افزودن به لیست مقایسه <input type="checkbox" onchange="AddToCompare(@Model.ProductID)"></h6>
         <span class="col-md-9 col-sm-9 col-xs-9 price-layer">
             <label>@Model.Price.ToString("#,0") تومان</label>
         </span>
@@ -18,3 +18,4 @@
         </a>
     </div>
 </div>
+

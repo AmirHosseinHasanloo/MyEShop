@@ -12,7 +12,7 @@ namespace MyEShop.Controllers
 {
     public class AccountController : Controller
     {
-        MyEshopContext db = new MyEshopContext();
+        private UnitOfWork _db = new UnitOfWork();
 
         [Route("Register")]
         public ActionResult Retgister()
@@ -27,7 +27,7 @@ namespace MyEShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!db.Users.Any(U => U.Email == register.Email.Trim().ToLower()))
+                if (!_db.UsersRepository.GetAll().Any(U => U.Email == register.Email.Trim().ToLower()))
                 {
                     Users user = new Users()
                     {
@@ -39,8 +39,8 @@ namespace MyEShop.Controllers
                         RoleID = 1,
                         UserName = register.UserName
                     };
-                    db.Users.Add(user);
-                    db.SaveChanges();
+                    _db.UsersRepository.Insert(user);
+                    _db.Save();
 
 
                     //Send Active Email
@@ -72,7 +72,7 @@ namespace MyEShop.Controllers
             if (ModelState.IsValid)
             {
                 string HashPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(login.Password, "MD5");
-                var Emailvalidate = db.Users.SingleOrDefault(U => U.Email == login.Email.Trim().ToLower()&&U.Password==HashPassword);
+                var Emailvalidate = _db.UsersRepository.GetAll().SingleOrDefault(U => U.Email == login.Email.Trim().ToLower()&&U.Password==HashPassword);
 
                 if (Emailvalidate != null)
                 {
@@ -96,7 +96,7 @@ namespace MyEShop.Controllers
 
         public ActionResult ActiveUser(string id)
         {
-            var IsExistsUser = db.Users.SingleOrDefault(U => U.ActiveCode == id);
+            var IsExistsUser = _db.UsersRepository.GetAll().SingleOrDefault(U => U.ActiveCode == id);
 
             if (IsExistsUser == null)
             {
@@ -105,7 +105,7 @@ namespace MyEShop.Controllers
             IsExistsUser.IsActive = true;
             IsExistsUser.ActiveCode = Guid.NewGuid().ToString();
             ViewBag.UserName = IsExistsUser.UserName;
-            db.SaveChanges();
+            _db.Save();
             return View();
         }
 
@@ -129,7 +129,7 @@ namespace MyEShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = db.Users.SingleOrDefault(U => U.Email.Trim().ToLower() == model.Email.Trim().ToLower());
+                var user = _db.UsersRepository.GetAll().SingleOrDefault(U => U.Email.Trim().ToLower() == model.Email.Trim().ToLower());
                 if (user != null)
                 {
                     if (user.IsActive)
@@ -167,14 +167,14 @@ namespace MyEShop.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = db.Users.SingleOrDefault(U => U.ActiveCode == id);
+                var user = _db.UsersRepository.GetAll().SingleOrDefault(U => U.ActiveCode == id);
                 if (user == null)
                 {
                     return HttpNotFound();
                 }
                 var HashPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
                 user.ActiveCode = Guid.NewGuid().ToString();
-                db.SaveChanges();
+                _db.Save();
                 return Redirect("/Login?recovery=true");
             }
 

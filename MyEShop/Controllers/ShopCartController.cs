@@ -8,7 +8,7 @@ namespace MyEShop.Controllers
 {
     public class ShopCartController : Controller
     {
-        private MyEshopContext db = new MyEshopContext();
+        private UnitOfWork _db = new UnitOfWork();
         // GET: ShopCart
 
         public ActionResult ShowCart()
@@ -20,7 +20,7 @@ namespace MyEShop.Controllers
 
                 foreach (var item in listShop)
                 {
-                    var product = db.Products.Where(p => p.ProductID == item.ProductID).Select(p => new
+                    var product = _db.ProductsRepository.GetAll().Where(p => p.ProductID == item.ProductID).Select(p => new
                     {
                         p.Title,
                         p.ImageName
@@ -51,7 +51,7 @@ namespace MyEShop.Controllers
                 List<DataLayer.ShopCartItem> cartItem = Session["ShopCart"] as List<DataLayer.ShopCartItem>;
                 foreach (var item in cartItem)
                 {
-                    var product = db.Products.Where(p => p.ProductID == item.ProductID).Select(p => new
+                    var product =_db.ProductsRepository.GetAll().Where(p => p.ProductID == item.ProductID).Select(p => new
                     {
                         p.Title,
                         p.ImageName,
@@ -94,19 +94,19 @@ namespace MyEShop.Controllers
         [Authorize]
         public ActionResult Payment()
         {
-            int UserId = db.Users.Single(u => u.UserName == User.Identity.Name).UserID;
+            int UserId = _db.UsersRepository.GetAll().Single(u => u.UserName == User.Identity.Name).UserID;
             Orders order = new Orders()
             {
                 UserID = UserId,
                 Date = DateTime.Now,
                 IsFinally = false,
             };
-            db.Orders.Add(order);
+            _db.Orders_Repository.Insert(order);
 
             var ListDetail = GetOrderList();
             foreach (var item in ListDetail)
             {
-                db.OrderDetails.Add(new OrderDetails()
+                _db.OrderDetails_Repository.Insert(new OrderDetails()
                 {
                     Count = item.Count,
                     OrderID = order.OrderID,
@@ -114,7 +114,7 @@ namespace MyEShop.Controllers
                     ProductID = item.ProductID
                 });
             }
-            db.SaveChanges();
+            _db.Save();
 
             // TODO : Online Payment
 

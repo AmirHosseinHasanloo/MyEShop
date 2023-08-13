@@ -9,7 +9,7 @@ namespace MyEShop.Controllers
 {
     public class HomeController : Controller
     {
-        MyEshopContext db = new MyEshopContext();
+      private UnitOfWork _db = new UnitOfWork();
         // GET: Home
         public ActionResult Index()
         {
@@ -25,7 +25,7 @@ namespace MyEShop.Controllers
         {
             DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
 
-            return PartialView(db.Slider.Where(s => s.IsActive == true && s.StartDate <= dt && s.EndDate >= dt));
+            return PartialView(_db.SliderRepository.GetAll().Where(s => s.IsActive == true && s.StartDate <= dt && s.EndDate >= dt));
         }
 
         public ActionResult Visitsite()
@@ -37,11 +37,11 @@ namespace MyEShop.Controllers
 
 
             SiteVisitViewModel Visit = new SiteVisitViewModel();
-            Visit.VisitSum = db.SiteVisit.Count();
-            Visit.VisitToDay = db.SiteVisit.Count(v => v.VisitDate == dt);
-            Visit.VisitYesterday = db.SiteVisit.Count(v => v.VisitDate == Yesterday);
-            Visit.VisitInLastMonth = db.SiteVisit.Count(v => v.VisitDate == LastMonth);
-            Visit.VisitInLastYear = db.SiteVisit.Count(v => v.VisitDate == LastYear);
+            Visit.VisitSum = _db.SiteVisitRepository.GetAll().Count();
+            Visit.VisitToDay = _db.SiteVisitRepository.GetAll().Count(v => v.VisitDate == dt);
+            Visit.VisitYesterday = _db.SiteVisitRepository.GetAll().Count(v => v.VisitDate == Yesterday);
+            Visit.VisitInLastMonth = _db.SiteVisitRepository.GetAll().Count(v => v.VisitDate == LastMonth);
+            Visit.VisitInLastYear = _db.SiteVisitRepository.GetAll().Count(v => v.VisitDate == LastYear);
             Visit.Online  = int.Parse(HttpContext.Application["Online"].ToString());
 
             return PartialView(Visit);

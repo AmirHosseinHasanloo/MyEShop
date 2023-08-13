@@ -164,6 +164,48 @@ namespace DataLayer
             }
         }
 
+        private GenericRepository<Product_Comments> _Product_CommentsRepository;
+
+        public GenericRepository<Product_Comments> Product_CommentsRepository
+        {
+            get
+            {
+                if (_Product_CommentsRepository == null)
+                {
+                    _Product_CommentsRepository = new GenericRepository<Product_Comments>(_context);
+                }
+                return _Product_CommentsRepository;
+            }
+        }
+
+        private GenericRepository<Orders> _Orders_Repository;
+
+        public GenericRepository<Orders> Orders_Repository
+        {
+            get
+            {
+                if (_Orders_Repository == null)
+                {
+                    _Orders_Repository = new GenericRepository<Orders>(_context);
+                }
+                return _Orders_Repository;
+            }
+        }
+
+        private GenericRepository<OrderDetails> _OrderDetails_Repository;
+
+        public GenericRepository<OrderDetails> OrderDetails_Repository
+        {
+            get
+            {
+                if (_OrderDetails_Repository == null)
+                {
+                    _OrderDetails_Repository = new GenericRepository<OrderDetails>(_context);
+                }
+                return _OrderDetails_Repository;
+            }
+        }
+
         public void Save()
         {
             _context.SaveChanges();
